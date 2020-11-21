@@ -1,0 +1,26 @@
+version: "3.7"
+services:
+ 
+ db:
+  image: mysql
+  container_name: Full2020-094876
+  restart: always
+  environment:
+   MYSQL_ROOT_PASSWORD: wp
+   MYSQL_DATABASE: ja
+   MYSQL_USER: jurek
+   MYSQL_PASSWORD: jurek
+  networks:
+   front:
+    ipv4_address: 10.0.0.3
+ java:
+  image: java:latest
+  container_name: java
+  
+networks:
+ front:
+  driver: bridge
+  name: Bridge-zadanie-1
+  ipam:
+   config:
+   - subnet: 10.0.0.0/24
