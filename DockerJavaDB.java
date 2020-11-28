@@ -8,7 +8,7 @@ import java.util.Scanner;
 public class DockerJavaDB {
 
     static String url = "jdbc:mysql://10.0.10.3:3306/full";
-    static String driver="com.mysql.jdbc.Driver"'
+    static String driver="com.mysql.jdbc.Driver";
 
     public static void main(String[] args) {
         // write your code here
