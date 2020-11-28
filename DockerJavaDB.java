@@ -1,164 +1,114 @@
-
-
-import java.io.IOException;
-import java.sql.*;
-import java.util.Properties;
 import java.util.Scanner;
+import java.sql.*;
 
-public class DockerJavaDB {
-
-    static String url = "jdbc:mysql://10.0.10.3:3306/full";
-
+public class DockerConnectMySQL {
+    static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+    static final String DB_URL = "jdbc:mysql://10.0.10.3:3306/full";
+    static final String USER = "root";
+    static final String PASS = "root";
 
     public static void main(String[] args) {
-        // write your code here
-          
-            Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
-        Scanner scanner= new Scanner(System.in);
-        CreateTable();
-        while(true) {
-            getMenu();
-            Integer val=Integer.parseInt(scanner.nextLine());
-            switch (val) {
-                case 1:
-                    System.out.println("Wyświetlanie danych");
-                    GetData();
-                    break;
-                case 2:
-                    System.out.println("Dodaj osobę");
-                    System.out.println("Podaj imie");
-                    String imie = scanner.nextLine();
-                    System.out.println("Podaj nazwisko");
-                    String nazwisko = scanner.nextLine();
-                    System.out.println("Podaj adres");
-                    String address = scanner.nextLine();
-                    System.out.println("Podaj miasto");
-                    String miasto = scanner.nextLine();
-                    AddData(imie, nazwisko, address, miasto);
-                    break;
-                case 3:
-                    System.out.println("Edytuj");
-                    System.out.println("Podaj id");
-                    int id = Integer.parseInt(scanner.nextLine());
-                    System.out.println("Podaj imie");
-                    String imie2 = scanner.nextLine();
-                    System.out.println("Podaj nazwisko");
-                    String nazwisko2 = scanner.nextLine();
-                    System.out.println("Podaj adres");
-                    String address2 = scanner.nextLine();
-                    System.out.println("Podaj miasto");
-                    String miasto2 = scanner.nextLine();
-                    UpdateData(id, imie2, nazwisko2, address2, miasto2);
-                    break;
-                case 4:
-                    System.out.println("Usuwanie");
-                    System.out.println("Podaj id");
-                    int id3 = Integer.parseInt(scanner.nextLine());
-                    DeleteData(id3);
-                    break;
-
-                case 5:
-                    System.out.println("Wyjście z aplikacji");
-                    System.exit(0);
-
+        Connection conn = null;
+        Statement stmt = null;
+        try {
+            Boolean connect = false;
+            do {
+                try {
+                    conn = DriverManager.getConnection(DB_URL, USER, PASS);
+                    connect = true;
+                } catch (Exception e) {
+                    System.out.println("Łączenie z serwerem bazy danych");
+                    Thread.sleep(1000);
+                }
+            } while (!connect);
+			System.out.println("Połączono z serwerem bazy danych");
+            stmt = conn.createStatement();
+            String sql;
+            sql = "DROP TABLE IF EXISTS Persons";
+            stmt.executeUpdate(sql);
+            sql = "CREATE TABLE Persons (PersonID int, LastName varchar(255), FirstName varchar(255), City varchar(255) );";
+            stmt.executeUpdate(sql);
+            sql = "INSERT INTO Persons(PersonID, LastName, FirstName, City) VALUES (1,'Komoda', 'Alfred', 'Lublin'),(2, 'Worsall', 'Raimund', 'Penambangan'),(3, 'Allcorn', 'Janie', 'Florencia');";
+            stmt.executeUpdate(sql);
+            Scanner menu = new Scanner(System.in);
+            String i;
+            do {
+                System.out.println("");
+                System.out.println("menu od sql");
+                System.out.println("wpisz tylko liczbę");
+                System.out.println("wybierz opcje:");
+                System.out.println("(1) dodanie encji");
+                System.out.println("(2) wyświetlenie");
+                System.out.println("(3) wyjdz");
+                i = (String) menu.next();
+                switch (i) {
+                    case "1": {
+                        Scanner insert = new Scanner(System.in);
+                        sql = "SELECT PersonID FROM Persons ORDER BY PersonID DESC LIMIT 1;";
+                        ResultSet rs = stmt.executeQuery(sql);
+                        int e = 0;
+                        if (rs.next()) {
+                            e = rs.getInt("PersonID");
+                        }
+                        rs.close();
+                        e++;
+                        sql = "INSERT INTO Persons (PersonID, LastName, FirstName, City) VALUES (" + e + ",'";
+                        System.out.println("Podaj Nazwisko:");
+                        sql += insert.nextLine();
+                        sql += "', '";
+                        System.out.println("Podaj Imię:");
+                        sql += insert.nextLine();
+                        sql += "', '";
+                        System.out.println("Podaj Miasto:");
+                        sql += insert.nextLine();
+                        sql += "');";
+                        stmt.executeUpdate(sql);
+						System.out.println("Dodano encje");
+                        break;
+                    }
+                    case "2": {
+                        sql = "SELECT PersonID, FirstName, LastName, City FROM Persons";
+                        ResultSet rs = stmt.executeQuery(sql);
+                        System.out.printf("|%5s|%15s|%15s|%15s|\n", "ID: ", "Imię: ", "Nazwisko: ", "Miasto: ");
+                        while (rs.next()) {
+                            int id = rs.getInt("PersonID");
+                            String first = rs.getString("FirstName");
+                            String last = rs.getString("LastName");
+                            String city = rs.getString("City");
+                            System.out.printf("|%4d |%14s |%14s |%14s |\n", id, first, last, city);
+                        }
+                        rs.close();
+                        break;
+                    }
+                    case "3": {
+                        i = "3";
+                        break;
+                    }
+                    default: {
+						System.out.println("");
+                        System.out.println("Wybierz odpowiednią opcje!");
+                        break;
+                    }
+                }
+            } while (i != "3");
+            stmt.close();
+            conn.close();
+        } catch (SQLException se) {
+            se.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException se2) {
+            }
+            try {
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
             }
         }
-
-
-//       DeleteData(1);
-    }
-
-    public static void GetData() {
-        Connection connection = null;
-        try {
-            connection = DriverManager.getConnection(url, "root", "");
-            Statement st = connection.createStatement();
-            String sql = "select * from persons";
-            ResultSet resultSet = st.executeQuery(sql);
-            while (resultSet.next()) {
-                System.out.println("ID: "+resultSet.getInt("ID"));
-                System.out.println("FirstName: "+resultSet.getString("FirstName"));
-                System.out.println("LastName: "+resultSet.getString("LastName"));
-                System.out.println("Address : "+resultSet.getString("Address"));
-                System.out.println("City: "+resultSet.getString("City"));
-            }
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-    }
-
-    public static void DeleteData(Integer id) {
-        Connection connection = null;
-        try {
-            connection = DriverManager.getConnection(url, "root", "");
-            Statement st = connection.createStatement();
-            String del = "DELETE FROM Persons WHERE ID =('" + id+ "')";
-            st.executeUpdate(del);
-            connection.close();
-
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-    }
-
-
-    public static void AddData(String lastName,String firstName,String address,String city) {
-        Connection connection = null;
-        try {
-            connection = DriverManager.getConnection(url, "root", "");
-            Statement st = connection.createStatement();
-            String sqlStatement =
-                    "insert into persons(LastName,FirstName,Address,City) values('"+lastName+"','"+firstName+"','"+address+"','"+city+"')";
-            System.out.println("Sql "+sqlStatement);
-            st.executeUpdate(sqlStatement);
-            connection.close();
-
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-    }
-    public static  void CreateTable(){
-        Connection connection = null;
-        try {
-            connection = DriverManager.getConnection(url, "root", "");
-            Statement st = connection.createStatement();
-            String delete="drop table persons";
-            String sqlStatement="CREATE TABLE `full`.`persons` ( `ID` INT(6) NULL AUTO_INCREMENT , `LastName` VARCHAR(255) NOT NULL , `FirstName` VARCHAR(255) NOT NULL , `Address` VARCHAR(255) NOT NULL , `City` VARCHAR(255) NOT NULL , PRIMARY KEY (`ID`));";
-            st.executeUpdate(delete);
-            st.executeUpdate(sqlStatement);
-            connection.close();
-
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-    }
-    public static void UpdateData(Integer id,String lastName,String firstName,String address,String city) {
-        Connection connection = null;
-        try {
-            connection = DriverManager.getConnection(url, "root", "root");
-            Statement st = connection.createStatement();
-            String sqlStatement =
-                    "update persons set LastName='"+lastName+"',FirstName='"+firstName+"',Address='"+address+"',City='"+city+"' where id="+id;
-            System.out.println("Sql "+sqlStatement);
-            st.executeUpdate(sqlStatement);
-            connection.close();
-
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-    }
-    public static void getMenu(){
-        System.out.println("Menu");
-        System.out.println("1. Wyświetlanie danych");
-        System.out.println("2.Dodawanie danych");
-        System.out.println("3.Aktulizowanie danych");
-        System.out.println("4.Usuwanie danych");
-        System.out.println("Podaj numer");
     }
 }
