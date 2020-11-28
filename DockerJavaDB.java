@@ -139,7 +139,7 @@ public class DockerJavaDB {
     public static void UpdateData(Integer id,String lastName,String firstName,String address,String city) {
         Connection connection = null;
         try {
-            connection = DriverManager.getConnection(url, "root", "");
+            connection = DriverManager.getConnection(url, "root", "root");
             Statement st = connection.createStatement();
             String sqlStatement =
                     "update persons set LastName='"+lastName+"',FirstName='"+firstName+"',Address='"+address+"',City='"+city+"' where id="+id;
