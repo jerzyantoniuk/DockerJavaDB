@@ -3,9 +3,9 @@ import java.sql.*;
 
 public class DockerJavaDB {
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String DB_URL = "jdbc:mysql://local_db/full";
-    static final String USER = "root";
-    static final String PASS = "root";
+    static final String DB_URL = "jdbc:mysql://10.0.0.3/baza";
+    static final String USER = "jurek";
+    static final String PASS = "jurek";
 
     public static void main(String[] args) {
         Connection conn = null;
