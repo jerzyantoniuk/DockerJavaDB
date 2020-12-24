@@ -10,7 +10,9 @@ public class DockerConnectMySQL {
     static String url = "jdbc:mysql://10.0.10.3:3306/full";
 
 
-    public static void main(String[] args) {
+  
+
+    public static void main(String[] args) throws InterruptedException {
         // write your code here
 
         Scanner scanner= new Scanner(System.in);
@@ -18,6 +20,7 @@ public class DockerConnectMySQL {
         while(true) {
             getMenu();
             Integer val=Integer.parseInt(scanner.nextLine());
+            scanner.wait();
             switch (val) {
                 case 1:
                     System.out.println("Wyświetlanie danych");
