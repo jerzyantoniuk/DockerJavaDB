@@ -5,7 +5,7 @@ import java.sql.*;
 import java.util.Properties;
 import java.util.Scanner;
 
-public class Main {
+public class App {
 
     static String url = "jdbc:mysql://10.0.10.3:3306/full";
 
