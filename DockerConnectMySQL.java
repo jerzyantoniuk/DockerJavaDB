@@ -5,28 +5,28 @@ import java.sql.*;
 import java.util.Properties;
 import java.util.Scanner;
 
-public class DockerConnectMySQL {
+public class Main {
 
     static String url = "jdbc:mysql://10.0.10.3:3306/full";
 
 
-  
-
     public static void main(String[] args) throws InterruptedException {
         // write your code here
 
-        static Scanner scanner= new Scanner(System.in);
+        Scanner scanner=new Scanner(System.in);
         CreateTable();
         while(true) {
-            getMenu();
-            Integer val=Integer.parseInt(scanner.nextLine());
-            
-            switch (val) {
+
+
+
+            switch (getMenu()) {
+
                 case 1:
                     System.out.println("Wyświetlanie danych");
                     GetData();
                     break;
                 case 2:
+
                     System.out.println("Dodaj osobę");
                     System.out.println("Podaj imie");
                     String imie = scanner.nextLine();
@@ -53,6 +53,7 @@ public class DockerConnectMySQL {
                     UpdateData(id, imie2, nazwisko2, address2, miasto2);
                     break;
                 case 4:
+
                     System.out.println("Usuwanie");
                     System.out.println("Podaj id");
                     int id3 = Integer.parseInt(scanner.nextLine());
@@ -155,12 +156,15 @@ public class DockerConnectMySQL {
             throwables.printStackTrace();
         }
     }
-    public static void getMenu(){
+    public static Integer getMenu(){
         System.out.println("Menu");
         System.out.println("1. Wyświetlanie danych");
         System.out.println("2.Dodawanie danych");
         System.out.println("3.Aktulizowanie danych");
         System.out.println("4.Usuwanie danych");
         System.out.println("Podaj numer");
+        Scanner scanner= new Scanner(System.in);
+        Integer val=Integer.parseInt(scanner.nextLine());
+        return val;
     }
 }
