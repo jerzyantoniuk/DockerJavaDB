@@ -15,7 +15,7 @@ public class DockerConnectMySQL {
     public static void main(String[] args) throws InterruptedException {
         // write your code here
 
-        Scanner scanner= new Scanner(System.in);
+        static Scanner scanner= new Scanner(System.in);
         CreateTable();
         while(true) {
             getMenu();
