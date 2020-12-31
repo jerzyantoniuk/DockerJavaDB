@@ -20,7 +20,7 @@ public class DockerConnectMySQL {
         while(true) {
             getMenu();
             Integer val=Integer.parseInt(scanner.nextLine());
-            scanner.wait();
+            
             switch (val) {
                 case 1:
                     System.out.println("Wyświetlanie danych");
