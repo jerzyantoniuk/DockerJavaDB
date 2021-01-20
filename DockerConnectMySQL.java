@@ -7,8 +7,9 @@ import java.util.Scanner;
 
 public class DockerConnectMySQL {
 
-    static String url = "jdbc:mysql://10.0.10.3:3306/full";
-
+    static String url = "jdbc:mysql://10.0.10.3:3306/persons";
+    static String user="JAntoniuk";
+    static String password="root"
 
     public static void main(String[] args) throws InterruptedException {
         // write your code here
@@ -74,7 +75,7 @@ public class DockerConnectMySQL {
     public static void GetData() {
         Connection connection = null;
         try {
-            connection = DriverManager.getConnection(url, "root", "");
+            connection = DriverManager.getConnection(url, user,password);
             Statement st = connection.createStatement();
             String sql = "select * from persons";
             ResultSet resultSet = st.executeQuery(sql);
@@ -95,7 +96,7 @@ public class DockerConnectMySQL {
     public static void DeleteData(Integer id) {
         Connection connection = null;
         try {
-            connection = DriverManager.getConnection(url, "root", "");
+            connection = DriverManager.getConnection(url,user,password);
             Statement st = connection.createStatement();
             String del = "DELETE FROM Persons WHERE ID =('" + id+ "')";
             st.executeUpdate(del);
@@ -111,7 +112,7 @@ public class DockerConnectMySQL {
     public static void AddData(String lastName,String firstName,String address,String city) {
         Connection connection = null;
         try {
-            connection = DriverManager.getConnection(url, "root", "");
+            connection = DriverManager.getConnection(url,user,password);
             Statement st = connection.createStatement();
             String sqlStatement =
                     "insert into persons(LastName,FirstName,Address,City) values('"+lastName+"','"+firstName+"','"+address+"','"+city+"')";
@@ -127,7 +128,7 @@ public class DockerConnectMySQL {
     public static  void CreateTable(){
         Connection connection = null;
         try {
-            connection = DriverManager.getConnection(url, "root", "");
+            connection = DriverManager.getConnection(url,user,password);
             Statement st = connection.createStatement();
             String delete="drop table persons";
             String sqlStatement="CREATE TABLE `full`.`persons` ( `ID` INT(6) NULL AUTO_INCREMENT , `LastName` VARCHAR(255) NOT NULL , `FirstName` VARCHAR(255) NOT NULL , `Address` VARCHAR(255) NOT NULL , `City` VARCHAR(255) NOT NULL , PRIMARY KEY (`ID`));";
@@ -143,7 +144,7 @@ public class DockerConnectMySQL {
     public static void UpdateData(Integer id,String lastName,String firstName,String address,String city) {
         Connection connection = null;
         try {
-            connection = DriverManager.getConnection(url, "root", "");
+            connection = DriverManager.getConnection(url,user,password);
             Statement st = connection.createStatement();
             String sqlStatement =
                     "update persons set LastName='"+lastName+"',FirstName='"+firstName+"',Address='"+address+"',City='"+city+"' where id="+id;
