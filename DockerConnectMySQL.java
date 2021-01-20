@@ -9,7 +9,7 @@ public class DockerConnectMySQL {
 
     static String url = "jdbc:mysql://10.0.10.3:3306/persons";
     static String user="JAntoniuk";
-    static String password="root"
+    static String password="root";
 
     public static void main(String[] args) throws InterruptedException {
         // write your code here
